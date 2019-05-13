@@ -1,4 +1,4 @@
-List of all commads unsed during the live demo
+List of all commands unsed during the live demo
 
 # Part 1
 
