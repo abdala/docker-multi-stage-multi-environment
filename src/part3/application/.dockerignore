@@ -1,0 +1,5 @@
+vendor
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+phpday.tar.gz

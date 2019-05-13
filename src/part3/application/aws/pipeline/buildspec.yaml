@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login --region $AWS_REGION --no-include-email)
+      - COMMIT="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - BUILD_URL="${REPOSITORY_URL}:${COMMIT}"
+
+  build:
+    commands:
+      - printf '{"Parameters":{"CommitHash":"%s"}}' "$COMMIT" > build.hash.json 
+      - cd src/part3/application
+      - docker-compose build
+      - docker-compose run cli ./vendor/bin/phpunit --testdox
+
+  post_build:
+    commands:
+      - if expr "$CODEBUILD_BUILD_SUCCEEDING" = "0"; then exit 1; fi
+      - docker tag $REPOSITORY_URL $BUILD_URL
+      - docker push $REPOSITORY_URL
+
+artifacts:
+  files:
+    - build.hash.json

@@ -1,0 +1,99 @@
+Description:
+  This template creates the pipeline to build, test and deploy an application
+
+Parameters:
+  GithubToken:
+    Type: String
+
+  ApplicationKey:
+    Type: String
+
+Resources:
+  
+  Repository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: phpday
+
+  CodeBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        EnvironmentVariables:
+          - Name: REPOSITORY_URL
+            Value: !Join ['', [!ImportValue ECRRegistry, !Ref Repository]]
+        Image: 'aws/codebuild/docker:18.09.0'
+        Type: LINUX_CONTAINER
+      ServiceRole: !ImportValue CodeBuildRoleArn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: src/part3/application/aws/pipeline/buildspec.yaml
+
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: PHPDay
+      ArtifactStore:
+        Location: !ImportValue SourceCodeStorage
+        Type: S3
+      RestartExecutionOnUpdate: false
+      RoleArn: !ImportValue CodePipelineRoleArn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Application
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: abdala
+                Repo: docker-multistage-multienvironment
+                Branch: master
+                OAuthToken: !Ref GithubToken
+                PollForSourceChanges: false
+              OutputArtifacts:
+                - Name: source_code
+
+        - Name: Build
+          Actions:
+            - ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref CodeBuild
+              InputArtifacts:
+                - Name: source_code
+              Name: CodeBuild
+              OutputArtifacts:
+                - Name: build_output
+
+        - Name: Deploy
+          Actions:
+
+            - Name: Service
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                RoleArn: !ImportValue CloudFormationRoleArn
+                StackName: phpday-service
+                TemplateConfiguration: 'build_output::build.hash.json'
+                TemplatePath: 'source_code::src/part3/application/aws/pipeline/service.yaml'
+                ParameterOverrides: !Sub |
+                  {
+                    "ApplicationKey": "${ApplicationKey}"
+                  }
+              InputArtifacts:
+                - Name: source_code
+                - Name: build_output

@@ -1,0 +1,7 @@
+docker/root/.aws/credentials
+docker/root/.scar/scar.log
+docker/home/scar/.aws/credentials
+docker/home/scar/.scar/scar.log
+docker/root/.bash_history
+docker/root/.viminfo
+docker/root/.udocker

@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  app:
+    image: registry.phpday.it:full
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - 80:80
+    environment: 
+      APP_ENV: local
+
+  cli:
+    image: registry.phpday.it:full-cli
+    build:
+      context: .
+      target: cli
+    command: sh
+    volumes:
+      - ./:/app
+    environment: 
+      APP_ENV: local
+
+  node:
+    image: registry.phpday.it:full-node
+    build:
+      context: .
+      target: node
+    volumes:
+      - ./:/app
+
+  worker:
+    image: registry.phpday.it:full-worker
+    build:
+      context: .
+      target: worker
+    volumes:
+      - ./:/app
+    environment: 
+      APP_ENV: local

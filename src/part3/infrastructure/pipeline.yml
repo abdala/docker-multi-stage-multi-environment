@@ -1,0 +1,169 @@
+Description: 
+  This template creates a common dependencies for CodePipeline.
+
+Resources:
+
+  SourceCodeStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 1
+            Status: Enabled
+
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codepipeline.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePermissions
+          PolicyDocument:
+            Statement:
+
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt [SourceCodeStorage, Arn]
+                  - !Join ['', [!GetAtt [SourceCodeStorage, Arn], "/*"]]
+
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                  - cloudformation:CreateStack
+                  - cloudformation:DeleteStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:UpdateStack
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - iam:PassRole
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                Resource:
+                  - '*'
+
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildServicePermissions
+          PolicyDocument:
+            Statement:
+
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:ListObjects
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt SourceCodeStorage.Arn
+                  - !Join ['', [!GetAtt SourceCodeStorage.Arn, "/*"]]
+                    
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - 'arn:aws:logs:*:*:*'
+
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:GetRepositoryPolicy
+                  - ecr:DescribeRepositories
+                  - ecr:ListImages
+                  - ecr:DescribeImages
+                  - ecr:BatchGetImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - ecr:PutImage
+                Resource:
+                  - '*'
+
+  CloudFormationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: cloudformation.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudFormationPermissions
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:*
+                  - elasticloadbalancing:*
+                  - ec2:*
+                  - ecr:*
+                  - ecs:*
+                  - logs:*
+                  - cloudwatch:*
+                  - application-autoscaling:*
+                  - sqs:*
+                  - lambda:*
+                  - s3:*
+                  - rds:*
+                  - sns:*
+                  - dynamodb:*
+                Resource:
+                  - '*'
+
+Outputs:
+
+  SourceCodeStorageArn:
+    Description: Arn S3 Bucket to store source Code from GitHub
+    Value: !GetAtt SourceCodeStorage.Arn
+    Export:
+      Name: SourceCodeStorageArn
+
+  SourceCodeStorage:
+    Description: S3 Bucket to store source Code from GitHub
+    Value: !Ref SourceCodeStorage
+    Export:
+      Name: SourceCodeStorage
+
+  CodePipelineRoleArn:
+    Description: Role authorized to execute CodePipeline
+    Value: !GetAtt CodePipelineRole.Arn
+    Export:
+      Name: CodePipelineRoleArn
+
+  CodeBuildRoleArn:
+    Description: Role authorized to run CodeBuild
+    Value: !GetAtt CodeBuildRole.Arn
+    Export:
+      Name: CodeBuildRoleArn
+
+  CloudFormationRoleArn:
+    Description: Role authorized to perform CloudFormation actions
+    Value: !GetAtt CloudFormationRole.Arn
+    Export:
+      Name: CloudFormationRoleArn

@@ -1,0 +1,43 @@
+#BASE
+FROM ubuntu as base
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+ && apt-get install -y php7.2-mysql php7.2-mbstring php7.2-iconv php7.2-json
+
+#DEPENDENCIES
+FROM base as dependencies
+
+COPY docker /
+
+COPY . /app
+
+WORKDIR /app
+
+RUN apt-get update \
+ && apt-get install -y unzip composer php7.2-curl \
+ && composer global require hirak/prestissimo \
+ && composer install --no-dev --no-interaction
+
+#CLI
+FROM dependencies as cli
+ 
+RUN apt-get install -y curl php7.2-dom \
+ && composer install
+
+#APP
+FROM base
+
+RUN apt-get install -y libapache2-mod-php7.2 php7.2-opcache
+ 
+COPY docker /
+
+COPY --from=dependencies /app /app
+
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache \
+ && a2enmod rewrite 
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]
