@@ -1,27 +1,32 @@
-List of all commands unsed during the live demo
+# List of all commands unsed during the live demo
 
 # Part 1
 
+```
 docker run debian ls
 docker run --rm debian ls
 docker run --rm -it debian bash
 
-alias 
+alias drun="docker run --rm -it"
 
-drun php -v
+drun php php -v
 drun node node -v
 drun golang go version
+
+alias drunv="docker run --rm -v `pwd`:/app -w /app"
 
 drunv php php date.php
 drunv node node date.js
 drunv golang go run date.go
 
 drunv -p 80:80 php -S 0.0.0.0:80
+```
 
 # Part 2
 
 ## Official PHP
 
+```
 docker build . -f Dockerfile-php -t phpday:php
 
 drunv -p 80:80 phpday:php
@@ -31,25 +36,31 @@ drunv phpday:php composer install
 drunv phpday:php ./vendor/bin/phpunit
 
 drun phpday:php php -m
+```
 
 ## Official PHP Multi-stage
 
+```
 docker build . -t phpday:php-multi
 docker build . -t phpday:php-multi-cli --target cli
 drunv phpday:php-multi-cli ./vendor/bin/phpunit
 drunv phpday:php-multi-cli ./artisan
 drunv -p 80:80 phpday:php-multi
+```
 
 # Alpine Multi-stage
 
+```
 docker-compose build
 
 docker-compose up app
 
 docker-compose run cli ./artisan
+```
 
 # Part 3
 
+```
 scar ls
 
 docker-compose build
@@ -69,3 +80,4 @@ scar run -f scar.yaml ./artisan phpday:date
 scar run -f scar.yaml ./artisan phpday:route date
 
 scar invoke -f scar.yaml -p '{"API_ROUTE":"/api/date"}'
+```
