@@ -7,7 +7,7 @@ docker run debian ls
 docker run --rm debian ls
 docker run --rm -it debian bash
 
-alias drun="docker run --rm"
+alias drun="docker run --rm -it"
 
 drun php php -v
 drun node node -v
