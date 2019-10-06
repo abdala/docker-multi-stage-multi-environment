@@ -8,7 +8,7 @@ use Illuminate\Contracts\Http\Kernel;
 
 class RouteCommand extends Command
 {
-    protected $signature = 'phpday:route {path?}';
+    protected $signature = 'ipc:route {path?}';
 
     protected $description = 'Execute a route';
 

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   app:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/phpday
+    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc
     build: .
     ports:
       - 80:80
@@ -10,7 +10,7 @@ services:
       APP_ENV: local
 
   artisan:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/phpday:artisan
+    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc:artisan
     build:
       context: .
       target: artisan
@@ -18,10 +18,10 @@ services:
       APP_ENV: local
 
   cli:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/phpday:cli
+    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc:cli
     build:
       context: .
       target: cli
     command: sh
-    environment: 
+    environment:
       APP_ENV: local
