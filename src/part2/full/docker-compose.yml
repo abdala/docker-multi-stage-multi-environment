@@ -2,28 +2,28 @@ version: '3.4'
 
 services:
   app:
-    image: registry.phpday.it:full
+    image: ipc:full
     build: .
     volumes:
       - ./:/app
     ports:
       - 80:80
-    environment: 
+    environment:
       APP_ENV: local
 
   cli:
-    image: registry.phpday.it:full-cli
+    image: ipc:full-cli
     build:
       context: .
       target: cli
     command: sh
     volumes:
       - ./:/app
-    environment: 
+    environment:
       APP_ENV: local
 
   node:
-    image: registry.phpday.it:full-node
+    image: ipc:full-node
     build:
       context: .
       target: node
@@ -31,11 +31,11 @@ services:
       - ./:/app
 
   worker:
-    image: registry.phpday.it:full-worker
+    image: ipc:full-worker
     build:
       context: .
       target: worker
     volumes:
       - ./:/app
-    environment: 
+    environment:
       APP_ENV: local
