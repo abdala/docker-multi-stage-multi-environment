@@ -6,7 +6,7 @@ services:
     build: .
     ports:
       - 80:80
-    environment: 
+    environment:
       APP_ENV: local
 
   artisan:
@@ -14,7 +14,7 @@ services:
     build:
       context: .
       target: artisan
-    environment: 
+    environment:
       APP_ENV: local
 
   cli:

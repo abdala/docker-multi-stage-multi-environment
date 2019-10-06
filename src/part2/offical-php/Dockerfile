@@ -1,6 +1,6 @@
 #----------------- base -------------------------
 
-FROM php:7.2-apache as base
+FROM php:7.3-apache as base
 
 RUN docker-php-ext-install pdo_mysql
 
@@ -8,15 +8,28 @@ RUN docker-php-ext-install pdo_mysql
 
 FROM base as dependencies
 
-WORKDIR /app 
+WORKDIR /app
 
-COPY . /app
+COPY docker /
+
+COPY composer.json /app/
+COPY composer.lock /app/
 
 RUN apt-get update \
  && apt-get install -y unzip \
  && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
- && composer install --no-dev --no-interaction 
+ && composer install --no-dev --no-interaction --no-autoloader
+
+COPY . /app
+
+#------------------ optimized --------------------
+
+FROM dependencies as optimized
+
+COPY docker /
+
+RUN composer dump-autoload --classmap-authoritative --optimize
 
 #----------------- cli -------------------------
 
@@ -28,7 +41,7 @@ RUN composer install --no-interaction
 
 FROM base as app
 
-COPY --from=dependencies /app /app
+COPY --from=optimized /app /app
 
 COPY docker /
 

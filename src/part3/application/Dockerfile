@@ -1,6 +1,6 @@
 #------------------- base -----------------------
 
-FROM alpine:3.9 as base
+FROM alpine:3.10 as base
 
 RUN apk update \
  && apk add php7-pdo_mysql php7-json php7-tokenizer php7-mbstring php7-iconv php7-bcmath php7-simplexml php7-session

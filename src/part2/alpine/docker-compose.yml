@@ -2,22 +2,22 @@ version: '3.4'
 
 services:
   app:
-    image: phpday:alpine
+    image: ipc:alpine
     build: .
     volumes:
       - ./:/app
     ports:
       - 80:80
-    environment: 
+    environment:
       APP_ENV: local
 
   cli:
-    image: phpday:alpine-cli
+    image: ipc:alpine-cli
     build:
       context: .
       target: cli
     command: sh
     volumes:
       - ./:/app
-    environment: 
+    environment:
       APP_ENV: local
