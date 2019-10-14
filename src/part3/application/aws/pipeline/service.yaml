@@ -54,8 +54,7 @@ Resources:
             - Name: APP_DEBUG
               Value: 1
           Essential: true
-          #Image: !Join ['', [!ImportValue ECRRegistry, 'talk:', !Ref CommitHash]]
-          Image: !Join ['', [!ImportValue ECRRegistry, 'talk:latest']]
+          Image: !Join ['', [!ImportValue ECRRegistry, 'talk:', !Ref CommitHash]]
           LogConfiguration:
             LogDriver: awslogs
             Options:
