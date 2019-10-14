@@ -17,7 +17,7 @@ phases:
       - cd src/part3/application
       - docker-compose run --rm hadolint < Dockerfile
       - docker-compose build --pull --parallel
-      - docker-compose run --rm trivy --auto-refresh $BUILD_URL
+      - docker-compose run --rm trivy --auto-refresh --clear-cache $REPOSITORY_URL
       - docker-compose run --rm cli ./vendor/bin/phpunit --testdox
 
   post_build:
