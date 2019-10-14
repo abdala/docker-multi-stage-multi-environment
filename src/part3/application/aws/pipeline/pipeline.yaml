@@ -13,7 +13,7 @@ Resources:
   Repository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: phpday
+      RepositoryName: talk
 
   CodeBuild:
     Type: AWS::CodeBuild::Project
@@ -35,7 +35,7 @@ Resources:
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
-      Name: PHPDay
+      Name: Talk
       ArtifactStore:
         Location: !ImportValue SourceCodeStorage
         Type: S3
@@ -87,7 +87,7 @@ Resources:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
                 RoleArn: !ImportValue CloudFormationRoleArn
-                StackName: phpday-service
+                StackName: talk-service
                 TemplateConfiguration: 'build_output::build.hash.json'
                 TemplatePath: 'source_code::src/part3/application/aws/pipeline/service.yaml'
                 ParameterOverrides: !Sub |

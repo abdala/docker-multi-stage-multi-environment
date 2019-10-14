@@ -19,7 +19,7 @@ Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: phpday-execution-role 
+      RoleName: talk-execution-role
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -32,7 +32,7 @@ Resources:
   TaskRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: phpday-task-role 
+      RoleName: talk-task-role
       AssumeRolePolicyDocument:
         Statement:
           Effect: Allow
@@ -56,7 +56,7 @@ Resources:
             - Name: APP_DEBUG
               Value: 1 
           Essential: true
-          Image: !Join ['', [!ImportValue ECRRegistry, 'phpday:', !Ref CommitHash]]
+          Image: !Join ['', [!ImportValue ECRRegistry, 'talk:', !Ref CommitHash]]
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -64,13 +64,13 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: task
           MemoryReservation: 450
-          Name: phpday
+          Name: talk
           PortMappings:
             - ContainerPort: '80'
           Privileged: 'false'
       Cpu: 256
       Memory: 512
-      Family: phpday
+      Family: talk
       NetworkMode: awsvpc
       ExecutionRoleArn: !Ref ExecutionRole
       TaskRoleArn: !Ref TaskRole
@@ -115,7 +115,7 @@ Resources:
       LaunchType: 'FARGATE'
       DesiredCount: 1
       LoadBalancers:
-        - ContainerName: phpday
+        - ContainerName: talk
           ContainerPort: 80
           TargetGroupArn: !Ref TargetGroup
       NetworkConfiguration:
