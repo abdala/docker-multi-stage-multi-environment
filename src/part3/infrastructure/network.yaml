@@ -21,7 +21,7 @@ Resources:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref VPC
 
-  PublicSubnet1: 
+  PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -29,7 +29,7 @@ Resources:
       CidrBlock: 10.1.10.0/24
       MapPublicIpOnLaunch: true
 
-  PublicSubnet2: 
+  PublicSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -37,7 +37,7 @@ Resources:
       CidrBlock: 10.1.20.0/24
       MapPublicIpOnLaunch: true
 
-  PrivateSubnet1: 
+  PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -45,7 +45,7 @@ Resources:
       CidrBlock: 10.1.40.0/24
       MapPublicIpOnLaunch: false
 
-  PrivateSubnet2: 
+  PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -56,7 +56,7 @@ Resources:
   NatGateway1EIP:
     Type: AWS::EC2::EIP
     DependsOn: InternetGatewayAttachment
-    Properties: 
+    Properties:
       Domain: vpc
 
   NatGateway2EIP:
@@ -65,13 +65,13 @@ Resources:
     Properties:
       Domain: vpc
 
-  NatGateway1: 
+  NatGateway1:
     Type: AWS::EC2::NatGateway
-    Properties: 
+    Properties:
       AllocationId: !GetAtt NatGateway1EIP.AllocationId
       SubnetId: !Ref PublicSubnet1
 
-  NatGateway2: 
+  NatGateway2:
     Type: AWS::EC2::NatGateway
     Properties:
       AllocationId: !GetAtt NatGateway2EIP.AllocationId
@@ -79,13 +79,13 @@ Resources:
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
-    Properties: 
+    Properties:
       VpcId: !Ref VPC
 
-  DefaultPublicRoute: 
+  DefaultPublicRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGatewayAttachment
-    Properties: 
+    Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
@@ -122,7 +122,7 @@ Resources:
 
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
-    Properties: 
+    Properties:
       VpcId: !Ref VPC
 
   DefaultPrivateRoute2:
@@ -138,9 +138,9 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable2
       SubnetId: !Ref PrivateSubnet2
 
-Outputs: 
+Outputs:
 
-  VPC: 
+  VPC:
     Description: A reference to the created VPC
     Value: !Ref VPC
     Export:

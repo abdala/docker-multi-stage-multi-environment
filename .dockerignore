@@ -1,2 +1,6 @@
 var
 src
+docker/root/.bash_history
+docker/root/.docker
+docker/root/.udocker
+docker/root/.cache

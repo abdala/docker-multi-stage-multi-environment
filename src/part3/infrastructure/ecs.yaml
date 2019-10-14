@@ -211,7 +211,7 @@ Outputs:
 
   PublicHttpListener:
     Description: Exposes the HTTP Listener for other services to attach routing rules to it.
-    Value: !Ref PublicHttpListener 
+    Value: !Ref PublicHttpListener
     Export:
       Name: PublicHttpListener
 
@@ -223,10 +223,10 @@ Outputs:
 
   PrivateHttpListener:
     Description: Exposes the HTTP Listener for other services to attach routing rules to it.
-    Value: !Ref PrivateHttpListener 
+    Value: !Ref PrivateHttpListener
     Export:
       Name: PrivateHttpListener
-  
+
   ECSRole:
     Description: The ARN of the ECS role
     Value: !GetAtt ECSRole.Arn
@@ -238,7 +238,7 @@ Outputs:
     Value: !GetAtt ECSTaskExecutionRole.Arn
     Export:
       Name: ECSTaskExecutionRole
-  
+
   ECRRegistry:
     Description: The URL/Address/Endpoint for the Docker Registry.
     Value: !Join ['', [!Ref 'AWS::AccountId', '.dkr.ecr.', !Ref 'AWS::Region', '.amazonaws.com/']]

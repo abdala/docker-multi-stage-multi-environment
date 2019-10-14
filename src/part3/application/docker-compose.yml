@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   app:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc
+    image: 250478887320.dkr.ecr.us-east-1.amazonaws.com/talk
     build: .
     ports:
       - 80:80
@@ -10,7 +10,8 @@ services:
       APP_ENV: local
 
   artisan:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc:artisan
+    image: 250478887320.dkr.ecr.us-east-1.amazonaws.com/talk:artisan
+    entrypoint: php artisan
     build:
       context: .
       target: artisan
@@ -18,10 +19,20 @@ services:
       APP_ENV: local
 
   cli:
-    image: 245004962504.dkr.ecr.us-east-1.amazonaws.com/ipc:cli
+    image: 250478887320.dkr.ecr.us-east-1.amazonaws.com/talk:cli
     build:
       context: .
       target: cli
     command: sh
     environment:
       APP_ENV: local
+
+  hadolint:
+    image: hadolint/hadolint
+    command: hadolint --ignore DL3018 -
+
+  trivy:
+    image: aquasec/trivy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.cache:/root/.cache

@@ -9,10 +9,12 @@ phases:
 
   build:
     commands:
-      - printf '{"Parameters":{"CommitHash":"%s"}}' "$COMMIT" > build.hash.json 
+      - printf '{"Parameters":{"CommitHash":"%s"}}' "$COMMIT" > build.hash.json
       - cd src/part3/application
-      - docker-compose build
-      - docker-compose run cli ./vendor/bin/phpunit --testdox
+      - docker-compose run --rm hadolint < Dockerfile
+      - docker-compose build --pull --parallel
+      - docker-compose run --rm trivy --auto-refresh $REPOSITORY_URL
+      - docker-compose run --rm cli ./vendor/bin/phpunit --testdox
 
   post_build:
     commands:

@@ -13,7 +13,7 @@ WORKDIR /app
 COPY composer.json /app/
 COPY composer.lock /app/
 
-RUN apk add composer unzip \
+RUN apk add --no-cache composer unzip \
  && composer install --no-dev --no-interaction --no-autoloader
 
 COPY . /app
@@ -28,7 +28,7 @@ RUN composer dump-autoload --classmap-authoritative --optimize
 
 FROM dependencies as cli
 
-RUN apk add php7-dom php7-xml php7-xmlwriter \
+RUN apk add --no-cache php7-dom php7-xml php7-xmlwriter \
  && composer install --no-interaction
 
 #------------------ artisan ---------------------
@@ -41,9 +41,9 @@ COPY docker /
 
 COPY --from=optimized /app /app
 
-RUN apk add php7-cli
+RUN apk add --no-cache php7-cli
 
-CMD php artisan ipc:route
+CMD ["php", "artisan", "ipc:route"]
 
 #------------------ app -------------------------
 
@@ -53,7 +53,7 @@ COPY docker /
 
 COPY --from=optimized /app /app
 
-RUN apk add php7-apache2 php7-opcache \
+RUN apk add --no-cache php7-apache2 php7-opcache \
  && chown -R apache:apache /app/storage /app/bootstrap/cache
 
 EXPOSE 80

@@ -1,3 +1,5 @@
+docker build . -t talk
+
 docker stop talk; docker rm talk;
 
 docker run -it --privileged \
