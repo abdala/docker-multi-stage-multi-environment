@@ -36,6 +36,7 @@ Resources:
         Type: LOCAL
         Modes:
           - LOCAL_DOCKER_LAYER_CACHE
+          - LOCAL_CUSTOM_CACHE
 
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline

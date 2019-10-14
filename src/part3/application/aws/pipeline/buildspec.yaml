@@ -25,6 +25,9 @@ phases:
       - if expr "$CODEBUILD_BUILD_SUCCEEDING" = "0"; then exit 1; fi
       - docker tag $REPOSITORY_URL $BUILD_URL
       - docker push $REPOSITORY_URL
+cache:
+  paths:
+    - '~/.cache'
 
 artifacts:
   files:
