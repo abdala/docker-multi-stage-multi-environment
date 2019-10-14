@@ -9,7 +9,7 @@ Parameters:
     Type: String
 
 Resources:
-  
+
   Repository:
     Type: AWS::ECR::Repository
     Properties:
@@ -21,16 +21,21 @@ Resources:
       Artifacts:
         Type: CODEPIPELINE
       Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
+        ComputeType: BUILD_GENERAL1_LARGE
         EnvironmentVariables:
           - Name: REPOSITORY_URL
             Value: !Join ['', [!ImportValue ECRRegistry, !Ref Repository]]
-        Image: 'aws/codebuild/docker:18.09.0'
+        Image: aws/codebuild/standard:2.0
+        PrivilegedMode: true
         Type: LINUX_CONTAINER
       ServiceRole: !ImportValue CodeBuildRoleArn
       Source:
         Type: CODEPIPELINE
         BuildSpec: src/part3/application/aws/pipeline/buildspec.yaml
+      Cache:
+        Type: LOCAL
+        Modes:
+          - LOCAL_DOCKER_LAYER_CACHE
 
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -52,7 +57,7 @@ Resources:
                 Version: 1
               Configuration:
                 Owner: abdala
-                Repo: docker-multistage-multienvironment
+                Repo: docker-multi-stage-multi-environment
                 Branch: master
                 OAuthToken: !Ref GithubToken
                 PollForSourceChanges: false

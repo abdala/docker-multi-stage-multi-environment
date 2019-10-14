@@ -78,7 +78,7 @@ Resources:
                 Resource:
                   - !GetAtt SourceCodeStorage.Arn
                   - !Join ['', [!GetAtt SourceCodeStorage.Arn, "/*"]]
-                    
+
               - Effect: Allow
                 Action:
                   - logs:CreateLogGroup
