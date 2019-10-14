@@ -47,16 +47,15 @@ Resources:
         - Environment:
             - Name: APP_KEY
               Value: !Ref ApplicationKey
-            - Name: APP_BUILD
-              Value: !Ref CommitHash
             - Name: AWS_REGION
               Value: !Ref 'AWS::Region'
             - Name: LOG_CHANNEL
               Value: errorlog
             - Name: APP_DEBUG
-              Value: 1 
+              Value: 1
           Essential: true
-          Image: !Join ['', [!ImportValue ECRRegistry, 'talk:', !Ref CommitHash]]
+          #Image: !Join ['', [!ImportValue ECRRegistry, 'talk:', !Ref CommitHash]]
+          Image: !Join ['', [!ImportValue ECRRegistry, 'talk:latest']]
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -111,7 +110,7 @@ Resources:
   Service:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !ImportValue ClusterName 
+      Cluster: !ImportValue ClusterName
       LaunchType: 'FARGATE'
       DesiredCount: 1
       LoadBalancers:
