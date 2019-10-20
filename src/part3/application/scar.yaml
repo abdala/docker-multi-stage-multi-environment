@@ -1,5 +1,0 @@
-functions:
-  scar-phpday:
-    image_file: phpday.tar.gz
-    api_gateway:
-      name: phpday-api

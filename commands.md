@@ -27,25 +27,25 @@ drunv -p 80:80 php -S 0.0.0.0:80
 ## Official PHP
 
 ```
-docker build . -f Dockerfile-php -t phpday:php
+docker build . -f Dockerfile-php -t talk:php
 
-drunv -p 80:80 phpday:php
+drunv -p 80:80 talk:php
 
-drun phpday:php ./vendor/bin/phpunit
-drunv phpday:php composer install
-drunv phpday:php ./vendor/bin/phpunit
+drun talk:php ./vendor/bin/phpunit
+drunv talk:php composer install
+drunv talk:php ./vendor/bin/phpunit
 
-drun phpday:php php -m
+drun talk:php php -m
 ```
 
 ## Official PHP Multi-stage
 
 ```
-docker build . -t phpday:php-multi
-docker build . -t phpday:php-multi-cli --target cli
-drunv phpday:php-multi-cli ./vendor/bin/phpunit
-drunv phpday:php-multi-cli ./artisan
-drunv -p 80:80 phpday:php-multi
+docker build . -t talk:php-multi
+docker build . -t talk:php-multi-cli --target cli
+drunv talk:php-multi-cli ./vendor/bin/phpunit
+drunv talk:php-multi-cli ./artisan
+drunv -p 80:80 talk:php-multi
 ```
 
 # Alpine Multi-stage
@@ -65,7 +65,7 @@ scar ls
 
 docker-compose build
 
-docker save 245004962504.dkr.ecr.us-east-1.amazonaws.com/phpday:artisan | gzip -c > phpday.tar.gz
+docker save 245004962504.dkr.ecr.us-east-1.amazonaws.com/talk:artisan | gzip -c > talk.tar.gz
 
 drunv -v /root/.aws:/home/scar/.aws -v /root/.scar/:/home/scar/.scar grycap/scar
 
@@ -75,9 +75,9 @@ pip3 install --upgrade scar --user
 
 scar init -f scar.yaml
 
-scar run -f scar.yaml ./artisan phpday:date
+scar run -f scar.yaml ./artisan talk:date
 
-scar run -f scar.yaml ./artisan phpday:route date
+scar run -f scar.yaml ./artisan talk:route date
 
 scar invoke -f scar.yaml -p '{"API_ROUTE":"/api/date"}'
 ```

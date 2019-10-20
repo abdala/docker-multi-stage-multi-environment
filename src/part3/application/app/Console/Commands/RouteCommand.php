@@ -8,7 +8,7 @@ use Illuminate\Contracts\Http\Kernel;
 
 class RouteCommand extends Command
 {
-    protected $signature = 'ipc:route {path?}';
+    protected $signature = 'talk:route {path?}';
 
     protected $description = 'Execute a route';
 

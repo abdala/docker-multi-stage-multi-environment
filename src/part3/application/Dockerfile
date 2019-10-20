@@ -43,7 +43,7 @@ COPY --from=optimized /app /app
 
 RUN apk add --no-cache php7-cli
 
-CMD ["php", "artisan", "ipc:route"]
+CMD ["php", "artisan", "talk:route"]
 
 #------------------ app -------------------------
 

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   app:
-    image: ipc:alpine
+    image: talk:alpine
     build: .
     volumes:
       - ./:/app
@@ -12,7 +12,7 @@ services:
       APP_ENV: local
 
   cli:
-    image: ipc:alpine-cli
+    image: talk:alpine-cli
     build:
       context: .
       target: cli

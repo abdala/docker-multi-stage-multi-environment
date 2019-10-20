@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class DateCommand extends Command
 {
-    protected $signature = 'ipc:date';
+    protected $signature = 'talk:date';
 
     protected $description = 'Display the current date and time';
 
