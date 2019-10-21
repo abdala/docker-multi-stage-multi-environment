@@ -48,7 +48,7 @@ drunv talk:php-multi-cli ./artisan
 drunv -p 80:80 talk:php-multi
 ```
 
-# Alpine Multi-stage
+## Alpine Multi-stage
 
 ```
 docker-compose build

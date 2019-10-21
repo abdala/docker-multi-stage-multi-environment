@@ -13,10 +13,10 @@ services:
 
   cli:
     image: talk:alpine-cli
+    command: echo 'cli service disabled'
     build:
       context: .
       target: cli
-    command: sh
     volumes:
       - ./:/app
     environment:

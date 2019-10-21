@@ -12,19 +12,16 @@ WORKDIR /app
 
 COPY docker /
 
-COPY composer.json /app/
-COPY composer.lock /app/
+COPY composer.* ./
 
 RUN apk add composer unzip \
  && composer install --no-dev --no-interaction --no-autoloader
 
-COPY . /app
+COPY . .
 
 #------------------ optimized --------------------
 
 FROM dependencies as optimized
-
-COPY docker /
 
 RUN composer dump-autoload --classmap-authoritative --optimize
 
@@ -49,15 +46,18 @@ CMD supervisord --nodaemon --configuration /etc/supervisor/supervisord.conf
 
 #------------------ node ------------------------
 
-FROM node:12.11-alpine as node
+FROM node:12-alpine as node
 
 WORKDIR /app
 
-COPY . /app
+COPY package.* yarn.lock ./
 
 RUN apk add --update nasm libpng-dev bash make g++ zlib-dev autoconf \
- && yarn install --non-interactive --no-progress \
- && yarn production
+ && yarn install --non-interactive --no-progress
+
+COPY . .
+
+RUN yarn production
 
 #------------------ app -------------------------
 

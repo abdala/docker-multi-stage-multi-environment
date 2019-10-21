@@ -13,19 +13,16 @@ WORKDIR /app
 
 COPY docker /
 
-COPY composer.json /app/
-COPY composer.lock /app/
+COPY composer.* ./
 
 RUN apk add composer unzip \
  && composer install --no-dev --no-interaction --no-autoloader
 
-COPY . /app
+COPY . .
 
 #------------------ optimized --------------------
 
 FROM dependencies as optimized
-
-COPY docker /
 
 RUN composer dump-autoload --classmap-authoritative --optimize
 

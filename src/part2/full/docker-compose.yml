@@ -16,7 +16,7 @@ services:
     build:
       context: .
       target: cli
-    command: sh
+    command: echo 'cli service disabled'
     volumes:
       - ./:/app
     environment:
@@ -24,6 +24,7 @@ services:
 
   node:
     image: talk:full-node
+    command: echo 'node service disabled'
     build:
       context: .
       target: node
