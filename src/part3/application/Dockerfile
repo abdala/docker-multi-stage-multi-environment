@@ -10,13 +10,12 @@ FROM base as dependencies
 
 WORKDIR /app
 
-COPY composer.json /app/
-COPY composer.lock /app/
+COPY composer.* ./
 
 RUN apk add --no-cache composer unzip \
  && composer install --no-dev --no-interaction --no-autoloader
 
-COPY . /app
+COPY . .
 
 #------------------ optimized --------------------
 
@@ -30,20 +29,6 @@ FROM dependencies as cli
 
 RUN apk add --no-cache php7-dom php7-xml php7-xmlwriter \
  && composer install --no-interaction
-
-#------------------ artisan ---------------------
-
-FROM base as artisan
-
-WORKDIR /app
-
-COPY docker /
-
-COPY --from=optimized /app /app
-
-RUN apk add --no-cache php7-cli
-
-CMD ["php", "artisan", "talk:route"]
 
 #------------------ app -------------------------
 

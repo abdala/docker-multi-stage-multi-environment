@@ -9,23 +9,14 @@ services:
     environment:
       APP_ENV: local
 
-  artisan:
-    image: 250478887320.dkr.ecr.us-east-1.amazonaws.com/talk:artisan
-    entrypoint: php artisan
-    build:
-      context: .
-      target: artisan
-    environment:
-      APP_ENV: local
-
   cli:
     image: 250478887320.dkr.ecr.us-east-1.amazonaws.com/talk:cli
     build:
       context: .
       target: cli
-    command: sh
+    command: echo 'cli service disabled'
     environment:
-      APP_ENV: local
+      APP_ENV: testing
 
   hadolint:
     image: hadolint/hadolint
